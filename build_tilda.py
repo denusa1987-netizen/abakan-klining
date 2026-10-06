@@ -65,5 +65,6 @@ block = f"""<!-- Абакан Клининг: лендинг + калькуля�
 {body}
 </div>
 """
+block = block.replace("img/", "https://denusa1987-netizen.github.io/abakan-klining/img/")
 pathlib.Path(__file__).with_name("tilda_block.html").write_text(block, encoding="utf-8")
 print("ok", len(block), "bytes")

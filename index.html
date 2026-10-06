@@ -39,14 +39,17 @@ button{font:inherit;cursor:pointer}
 :focus-visible{outline:3px solid var(--lemon);outline-offset:2px;border-radius:8px}
 
 /* ---------- hero: стекло, которое протирают ---------- */
-.hero{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding:28px 0 34px}
-.hero .wrap{position:relative;z-index:2}
+.hero{position:relative;overflow:hidden;color:#fff;padding:28px 0 34px;min-height:380px;display:flex;align-items:center;
+  background:var(--ink) url(img/hero.webp) 72% center/cover no-repeat}
+.hero::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(14,42,51,.96) 0,rgba(14,42,51,.88) 38%,rgba(14,42,51,.35) 70%,rgba(14,42,51,.15) 100%)}
+@media (min-width:720px){.hero{min-height:460px;background-position:right center}.hero::before{background:linear-gradient(90deg,rgba(14,42,51,.95) 0,rgba(14,42,51,.85) 42%,rgba(14,42,51,.05) 75%,transparent 100%)}}
+.hero .wrap{position:relative;z-index:2;width:100%}
 .eyebrow{font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#9FD6DE}
 .hero h1{font-size:clamp(28px,7vw,44px);font-weight:700;margin:12px 0 14px}
 .hero h1 em{font-style:normal;color:var(--lemon)}
-.hero p{font-size:16px;color:#CFE3E8;max-width:34ch}
+.hero p{font-size:16px;color:#CFE3E8;max-width:34ch;text-shadow:0 1px 8px rgba(14,42,51,.6)}
 .hero .cta{display:inline-flex;gap:10px;align-items:center;margin-top:22px;background:var(--lemon);color:var(--ink);border:0;padding:14px 20px;border-radius:999px;font-weight:600;font-size:16px;text-decoration:none}
-.fog{position:absolute;inset:0;z-index:1;pointer-events:none;
+.fog{position:absolute;inset:0;z-index:1;background-color:rgba(190,215,220,.55);pointer-events:none;
   background:
    radial-gradient(60% 50% at 80% 20%,rgba(255,255,255,.22),transparent 70%),
    radial-gradient(40% 40% at 10% 90%,rgba(31,166,184,.35),transparent 70%),
@@ -77,7 +80,8 @@ section{margin-top:34px}
 .group{background:var(--glass);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
 .group summary{list-style:none;display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;user-select:none}
 .group summary::-webkit-details-marker{display:none}
-.group summary .ic{width:40px;height:40px;border-radius:12px;background:var(--mist);display:grid;place-items:center;font-size:20px;flex:none}
+.group summary .ic{width:46px;height:46px;border-radius:12px;background:var(--mist);display:grid;place-items:center;flex:none}
+.group summary .ic img{width:40px;height:40px;object-fit:contain}
 .group summary .t{flex:1}
 .group summary .t b{display:block;font-weight:600;font-size:16px}
 .group summary .t span{font-size:13px;color:var(--ink-2)}
@@ -251,28 +255,28 @@ const DISCOUNTS = {
   cap: 0.15           // максимум суммарной скидки
 };
 const GROUPS = [
-  { id:"okna", ic:"🪟", name:"Окна и балконы", hint:"от 500 ₽ за окно", items:[
+  { id:"okna", name:"Окна и балконы", hint:"от 500 ₽ за окно", items:[
     { id:"w2", name:"Окно, 2 створки", price:500, unit:"шт" },
     { id:"w3", name:"Окно, 3 створки", price:700, unit:"шт" },
     { id:"wf", name:"Французское окно / витраж", price:1200, unit:"шт" },
     { id:"balk", name:"Балкон или лоджия, остекление", price:1500, unit:"пог. м", step:0.5, min:1 },
   ]},
-  { id:"pov", ic:"🧽", name:"Полы, стены, потолки", hint:"от 50 ₽ за м²", items:[
+  { id:"pov", name:"Полы, стены, потолки", hint:"от 50 ₽ за м²", items:[
     { id:"pol", name:"Мытьё полов", price:70, unit:"м²", min:5 },
     { id:"sten", name:"Мытьё стен", price:50, unit:"м²", min:5 },
     { id:"potol", name:"Натяжной потолок", price:80, unit:"м²", min:5 },
   ]},
-  { id:"kuh", ic:"🍳", name:"Кухня и санузел", hint:"кухня от 1200 ₽/пог. м", items:[
+  { id:"kuh", name:"Кухня и санузел", hint:"кухня от 1200 ₽/пог. м", items:[
     { id:"kuhnya", name:"Кухонный гарнитур снаружи и внутри", price:1200, unit:"пог. м", step:0.5, min:1 },
     { id:"san", name:"Санузел (ванная + туалет)", price:1500, unit:"шт" },
     { id:"holod", name:"Холодильник внутри и снаружи", price:700, unit:"шт" },
     { id:"svch", name:"Микроволновая печь", price:700, unit:"шт" },
   ]},
-  { id:"kovry", ic:"🧶", name:"Химчистка ковров", hint:"200 ₽/м², минимум 400 ₽", items:[
+  { id:"kovry", name:"Химчистка ковров", hint:"200 ₽/м², минимум 400 ₽", items:[
     { id:"kover", name:"Ковёр, ковролин", price:200, unit:"м²", step:0.5, min:2, note:"минимальный заказ 400 ₽" },
     { id:"kovrik", name:"Придверный коврик до 100×100 см", price:400, unit:"шт" },
   ]},
-  { id:"mebel", ic:"🛋️", name:"Химчистка мягкой мебели", hint:"диван от 2300 ₽", items:[
+  { id:"mebel", name:"Химчистка мягкой мебели", hint:"диван от 2300 ₽", items:[
     { id:"d2", name:"Диван 2-местный", price:2300, unit:"шт" },
     { id:"d3", name:"Диван 3-местный", price:2800, unit:"шт" },
     { id:"d4", name:"Угловой диван, 4 места", price:3300, unit:"шт" },
@@ -287,7 +291,7 @@ const GROUPS = [
   ]},
   /* Генеральная уборка и уборка после ремонта: цены ещё не утверждены.
      Чтобы включить — поставьте enabled:true и проверьте цифры. */
-  { id:"gen", ic:"✨", name:"Генеральная уборка", hint:"по заявке", enabled:false, items:[
+  { id:"gen", name:"Генеральная уборка", hint:"по заявке", enabled:false, items:[
     { id:"gen_m2", name:"Генеральная уборка квартиры", price:120, unit:"м²", min:20 },
     { id:"rem_m2", name:"Уборка после ремонта", price:180, unit:"м²", min:20 },
   ]},
@@ -304,7 +308,7 @@ GROUPS.filter(g => g.enabled !== false).forEach((g, gi) => {
   const d = document.createElement("details");
   d.className = "group"; d.id = "g-" + g.id;
   if (gi === 0) d.open = true;
-  d.innerHTML = `<summary><div class="ic">${g.ic}</div><div class="t"><b>${g.name}</b><span>${g.hint}</span></div><span class="badge"></span>
+  d.innerHTML = `<summary><div class="ic"><img src="img/ic-${g.id}.webp" alt="" width="40" height="40" loading="lazy"></div><div class="t"><b>${g.name}</b><span>${g.hint}</span></div><span class="badge"></span>
     <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
     <div class="items">${g.items.map(it => `
       <div class="item" id="it-${it.id}">

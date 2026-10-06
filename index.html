@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Абакан Клининг — калькулятор уборки</title>
+<meta name="description" content="Уборка квартир и домов в Абакане: окна, полы, кухня, санузел, химчистка ковров и мебели. Посчитайте стоимость за минуту и получите скидку подписчика.">
+<meta property="og:title" content="Абакан Клининг — посчитайте уборку за минуту">
+<meta property="og:description" content="Окна от 500 ₽, ковры 200 ₽/м², диван от 2300 ₽. Скидка 10% подписчикам ВКонтакте.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E2A33;        /* глубокая вода */
+  --ink-2:#3C5A64;
+  --mist:#E9F1F3;       /* фон: запотевшее стекло */
+  --glass:#FFFFFF;
+  --aqua:#1FA6B8;       /* чистая вода */
+  --aqua-deep:#0F7F8E;
+  --lemon:#F9D54A;      /* лимон — сигнал «чисто» */
+  --line:#CFDDE1;
+  --ok:#1E9E6A;
+  --r:18px;
+  --shadow:0 10px 30px rgba(14,42,51,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--ink);background:var(--mist);
+  -webkit-font-smoothing:antialiased;line-height:1.45;
+  padding-bottom:120px;
+}
+h1,h2,h3{font-family:"Unbounded","Golos Text",sans-serif;letter-spacing:-.01em;line-height:1.08}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+a{color:var(--aqua-deep)}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--lemon);outline-offset:2px;border-radius:8px}
+
+/* ---------- hero: стекло, которое протирают ---------- */
+.hero{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding:28px 0 34px}
+.hero .wrap{position:relative;z-index:2}
+.eyebrow{font-size:13px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#9FD6DE}
+.hero h1{font-size:clamp(28px,7vw,44px);font-weight:700;margin:12px 0 14px}
+.hero h1 em{font-style:normal;color:var(--lemon)}
+.hero p{font-size:16px;color:#CFE3E8;max-width:34ch}
+.hero .cta{display:inline-flex;gap:10px;align-items:center;margin-top:22px;background:var(--lemon);color:var(--ink);border:0;padding:14px 20px;border-radius:999px;font-weight:600;font-size:16px;text-decoration:none}
+.fog{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+   radial-gradient(60% 50% at 80% 20%,rgba(255,255,255,.22),transparent 70%),
+   radial-gradient(40% 40% at 10% 90%,rgba(31,166,184,.35),transparent 70%),
+   repeating-linear-gradient(115deg,rgba(255,255,255,.06) 0 2px,transparent 2px 14px);
+  -webkit-mask:linear-gradient(90deg,#000 0,#000 var(--wipe,0%),transparent calc(var(--wipe,0%) + 12%));
+          mask:linear-gradient(90deg,#000 0,#000 var(--wipe,0%),transparent calc(var(--wipe,0%) + 12%));
+  animation:wipe 1.8s cubic-bezier(.6,0,.2,1) .2s both reverse;
+}
+.squeegee{position:absolute;top:-10%;bottom:-10%;width:6px;background:linear-gradient(var(--lemon),#fff);z-index:1;border-radius:3px;
+  left:-2%;animation:sq 1.8s cubic-bezier(.6,0,.2,1) .2s both;opacity:.9}
+@keyframes wipe{from{--wipe:0%}to{--wipe:110%}}
+@keyframes sq{from{left:-2%;opacity:.9}to{left:104%;opacity:0}}
+@property --wipe{syntax:'<percentage>';inherits:true;initial-value:0%}
+@media (prefers-reduced-motion:reduce){.fog,.squeegee{animation:none}.fog{display:none}}
+
+/* ---------- факты ---------- */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:-18px auto 0;position:relative;z-index:3}
+.fact{background:var(--glass);border-radius:14px;padding:12px 12px;box-shadow:var(--shadow);font-size:13px;color:var(--ink-2)}
+.fact b{display:block;font-family:"Unbounded";font-size:17px;color:var(--ink);font-weight:700;margin-bottom:2px}
+
+/* ---------- секции ---------- */
+section{margin-top:34px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sec-h h2{font-size:22px;font-weight:700}
+.sec-h small{color:var(--ink-2);font-size:13px}
+
+/* ---------- калькулятор ---------- */
+.group{background:var(--glass);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.group summary{list-style:none;display:flex;align-items:center;gap:12px;padding:16px;cursor:pointer;user-select:none}
+.group summary::-webkit-details-marker{display:none}
+.group summary .ic{width:40px;height:40px;border-radius:12px;background:var(--mist);display:grid;place-items:center;font-size:20px;flex:none}
+.group summary .t{flex:1}
+.group summary .t b{display:block;font-weight:600;font-size:16px}
+.group summary .t span{font-size:13px;color:var(--ink-2)}
+.group summary .chev{width:22px;height:22px;transition:transform .25s;color:var(--ink-2)}
+.group[open] summary .chev{transform:rotate(180deg)}
+.group .badge{font-size:12px;font-weight:600;background:var(--lemon);color:var(--ink);padding:3px 8px;border-radius:999px;display:none}
+.group.has .badge{display:inline-block}
+.items{border-top:1px solid var(--line);padding:4px 16px 8px}
+.item{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;padding:12px 0;border-bottom:1px dashed var(--line)}
+.item:last-child{border-bottom:0}
+.item .nm{font-weight:500}
+.item .pr{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.item .pr s{color:#9AAEB4}
+.step{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+.step button{width:38px;height:38px;border:0;background:transparent;font-size:20px;color:var(--aqua-deep);display:grid;place-items:center}
+.step button:disabled{color:#B8C7CC}
+.step input{width:56px;height:38px;border:0;text-align:center;font:inherit;font-weight:600;font-variant-numeric:tabular-nums;background:transparent;-moz-appearance:textfield}
+.step input::-webkit-outer-spin-button,.step input::-webkit-inner-spin-button{-webkit-appearance:none}
+.step .u{padding-right:12px;font-size:13px;color:var(--ink-2)}
+.item.on .nm{color:var(--aqua-deep)}
+.item .sum{grid-column:1/-1;font-size:13px;color:var(--ok);font-weight:600;display:none;font-variant-numeric:tabular-nums}
+.item.on .sum{display:block}
+
+/* ---------- скидки ---------- */
+.promo{background:var(--glass);border-radius:var(--r);box-shadow:var(--shadow);padding:16px}
+.promo h3{font-size:16px;margin-bottom:10px;font-weight:700}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+.chk:first-of-type{border-top:0}
+.chk input{width:22px;height:22px;accent-color:var(--aqua);flex:none;margin-top:2px}
+.chk b{display:block;font-weight:600}
+.chk span{font-size:13px;color:var(--ink-2)}
+.chk .auto{font-size:12px;color:var(--ink-2);background:var(--mist);padding:2px 8px;border-radius:999px;margin-left:auto;align-self:center;white-space:nowrap}
+.chk.active .auto{background:var(--ok);color:#fff}
+
+/* ---------- чек ---------- */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(233,241,243,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.bar .in{max-width:720px;margin:0 auto;display:flex;gap:12px;align-items:center}
+.bar .tot{flex:1;min-width:0}
+.bar .tot small{display:block;font-size:12px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .tot b{font-family:"Unbounded";font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar .tot b s{font-family:"Golos Text";font-size:14px;font-weight:500;color:#8DA3AA;margin-left:8px}
+.bar .go{background:var(--ink);color:#fff;border:0;border-radius:999px;padding:14px 20px;font-weight:600;font-size:15px;white-space:nowrap}
+.bar .go:disabled{background:#B8C7CC}
+
+.receipt{background:var(--glass);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 16px;position:relative}
+.receipt::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:8px;
+  background:radial-gradient(circle at 8px -2px,transparent 8px,var(--glass) 8.5px) 0 0/16px 8px}
+.receipt h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.receipt .line{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:14px;border-bottom:1px dashed var(--line);font-variant-numeric:tabular-nums}
+.receipt .line span:last-child{font-weight:600;white-space:nowrap}
+.receipt .line.disc span{color:var(--ok)}
+.receipt .line.total{border:0;font-family:"Unbounded";font-size:18px;padding-top:12px}
+.receipt .empty{color:var(--ink-2);font-size:14px;padding:8px 0}
+.receipt .note{font-size:12px;color:var(--ink-2);margin-top:10px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:12px 18px;font-weight:600;font-size:15px;text-decoration:none;border:1.5px solid var(--ink);color:var(--ink);background:#fff}
+.btn.pri{background:var(--ink);color:#fff}
+.btn svg{width:18px;height:18px}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:60}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- почему мы ---------- */
+.why{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.why div{background:var(--glass);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+.why b{display:block;font-weight:600;margin-bottom:4px}
+.why span{font-size:13px;color:var(--ink-2)}
+.steps{counter-reset:s}
+.steps li{list-style:none;display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.steps li::before{counter-increment:s;content:counter(s);width:30px;height:30px;border-radius:50%;background:var(--lemon);display:grid;place-items:center;font-weight:700;flex:none;font-family:"Unbounded";font-size:13px}
+.steps li b{display:block;font-weight:600}
+.steps li span{font-size:13px;color:var(--ink-2)}
+
+footer{margin-top:40px;padding:24px 0 10px;color:var(--ink-2);font-size:13px}
+footer .big{font-family:"Unbounded";color:var(--ink);font-size:18px;font-weight:700;margin-bottom:6px}
+footer a{display:inline-block;margin-right:14px}
+
+@media (min-width:600px){
+  .facts{gap:14px}.fact{padding:16px}
+  .item{grid-template-columns:1fr auto;padding:14px 0}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="fog"></div><div class="squeegee"></div>
+  <div class="wrap">
+    <div class="eyebrow">Абакан · выезд на дом</div>
+    <h1>Посчитайте уборку <em>за минуту</em> — без звонка</h1>
+    <p>Окна, полы, кухня, санузел, химчистка ковров и мебели. Отметьте, что нужно, — цена сложится сама. Подписчикам ВКонтакте −10%.</p>
+    <a class="cta" href="#calc">Открыть калькулятор
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="facts">
+    <div class="fact"><b>5,0 ★</b>рейтинг на Авито, уровень сервиса 100%</div>
+    <div class="fact"><b>−10%</b>подписчикам сообщества ВКонтакте</div>
+    <div class="fact"><b>Своя химия</b>инвентарь и средства привозим с собой</div>
+  </div>
+
+  <section id="calc">
+    <div class="sec-h"><h2>Что убираем?</h2><small>цены «от», итог уточним на месте</small></div>
+    <div id="groups"></div>
+
+    <div class="promo" style="margin-top:14px">
+      <h3>Скидки</h3>
+      <label class="chk"><input type="checkbox" id="sub"><div><b>Я подписан(а) на сообщество ВКонтакте</b><span>−10% на весь заказ. Подписаться можно прямо сейчас — проверим при заказе.</span></div></label>
+      <div class="chk" id="bundle"><div style="width:22px;flex:none"></div><div><b>Комплекс из 3+ услуг</b><span>−5% считается автоматически</span></div><span class="auto">ещё не набрано</span></div>
+    </div>
+  </section>
+
+  <section id="itog">
+    <div class="sec-h"><h2>Ваш расчёт</h2></div>
+    <div class="receipt">
+      <div id="lines"><div class="empty">Пока ничего не выбрано. Отметьте услуги выше — здесь появится расчёт.</div></div>
+      <p class="note">Цены ориентировочные и зависят от степени загрязнения. Точную сумму мастер назовёт на месте — до начала работы.</p>
+      <div class="actions">
+        <a class="btn pri" id="order" href="https://vk.me/abakan_klining" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.8 18.9c-6.6 0-10.4-4.5-10.5-12.1h3.3c.1 5.5 2.6 7.9 4.5 8.3V6.8h3.1v4.7c1.9-.2 3.9-2.4 4.6-4.7h3.1c-.5 3-2.7 5.1-4.3 6 1.6.7 4.1 2.6 5.1 6.1h-3.4c-.8-2.5-2.7-4.4-5.1-4.6v4.6h-.4z"/></svg>
+          Заказать во ВКонтакте</a>
+        <button class="btn" id="copy">Скопировать расчёт</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-h"><h2>Почему к нам</h2></div>
+    <div class="why">
+      <div><b>Платите после</b><span>Сначала смотрим и называем цену, потом работаем. Никаких предоплат.</span></div>
+      <div><b>Профессиональная химия</b><span>Средства под каждый тип ткани и покрытия — без разводов и запаха.</span></div>
+      <div><b>Приезжаем вовремя</b><span>Договариваемся на конкретный час, а не «во второй половине дня».</span></div>
+      <div><b>Абакан и пригород</b><span>Выезд по городу бесплатный. Черногорск, Подсинее, Усть-Абакан — по договорённости.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-h"><h2>Как проходит заказ</h2></div>
+    <ol class="steps">
+      <li><div><b>Считаете здесь</b><span>Отмечаете услуги, видите ориентир по цене.</span></div></li>
+      <li><div><b>Пишете нам в сообщения</b><span>Кнопка «Заказать» откроет диалог. Вставьте расчёт и удобное время.</span></div></li>
+      <li><div><b>Мастер приезжает и называет точную цену</b><span>Если не устроит — просто откажетесь, выезд бесплатный.</span></div></li>
+      <li><div><b>Чисто. Оплата любым способом</b><span>Наличные, перевод, СБП.</span></div></li>
+    </ol>
+  </section>
+
+  <footer>
+    <div class="big">Абакан Клининг</div>
+    <div>Уборка и химчистка на дому · Абакан</div>
+    <div style="margin-top:8px"><a href="https://vk.ru/abakan_klining" target="_blank" rel="noopener">Сообщество ВКонтакте</a><a href="https://vk.me/abakan_klining" target="_blank" rel="noopener">Написать нам</a></div>
+  </footer>
+</div>
+
+<div class="bar">
+  <div class="in">
+    <div class="tot"><small id="barSub">Выберите услуги</small><b><span id="barTot">0 ₽</span></b></div>
+    <button class="go" id="barGo" disabled>Заказать</button>
+  </div>
+</div>
+<div class="toast" id="toast">Расчёт скопирован</div>
+
+<script>
+/* ============ НАСТРОЙКИ: цены и скидки правятся здесь ============ */
+const DISCOUNTS = {
+  subscriber: 0.10,   // подписчик сообщества ВК
+  bundleMin: 3,       // от скольких разных услуг даётся скидка за комплекс
+  bundle: 0.05,
+  cap: 0.15           // максимум суммарной скидки
+};
+const GROUPS = [
+  { id:"okna", ic:"🪟", name:"Окна и балконы", hint:"от 500 ₽ за окно", items:[
+    { id:"w2", name:"Окно, 2 створки", price:500, unit:"шт" },
+    { id:"w3", name:"Окно, 3 створки", price:700, unit:"шт" },
+    { id:"wf", name:"Французское окно / витраж", price:1200, unit:"шт" },
+    { id:"balk", name:"Балкон или лоджия, остекление", price:1500, unit:"пог. м", step:0.5, min:1 },
+  ]},
+  { id:"pov", ic:"🧽", name:"Полы, стены, потолки", hint:"от 50 ₽ за м²", items:[
+    { id:"pol", name:"Мытьё полов", price:70, unit:"м²", min:5 },
+    { id:"sten", name:"Мытьё стен", price:50, unit:"м²", min:5 },
+    { id:"potol", name:"Натяжной потолок", price:80, unit:"м²", min:5 },
+  ]},
+  { id:"kuh", ic:"🍳", name:"Кухня и санузел", hint:"кухня от 1200 ₽/пог. м", items:[
+    { id:"kuhnya", name:"Кухонный гарнитур снаружи и внутри", price:1200, unit:"пог. м", step:0.5, min:1 },
+    { id:"san", name:"Санузел (ванная + туалет)", price:1500, unit:"шт" },
+    { id:"holod", name:"Холодильник внутри и снаружи", price:700, unit:"шт" },
+    { id:"svch", name:"Микроволновая печь", price:700, unit:"шт" },
+  ]},
+  { id:"kovry", ic:"🧶", name:"Химчистка ковров", hint:"200 ₽/м², минимум 400 ₽", items:[
+    { id:"kover", name:"Ковёр, ковролин", price:200, unit:"м²", step:0.5, min:2, note:"минимальный заказ 400 ₽" },
+    { id:"kovrik", name:"Придверный коврик до 100×100 см", price:400, unit:"шт" },
+  ]},
+  { id:"mebel", ic:"🛋️", name:"Химчистка мягкой мебели", hint:"диван от 2300 ₽", items:[
+    { id:"d2", name:"Диван 2-местный", price:2300, unit:"шт" },
+    { id:"d3", name:"Диван 3-местный", price:2800, unit:"шт" },
+    { id:"d4", name:"Угловой диван, 4 места", price:3300, unit:"шт" },
+    { id:"d5", name:"Большой угловой, 5 мест", price:3800, unit:"шт" },
+    { id:"dd", name:"Детский диван", price:2500, unit:"шт" },
+    { id:"kreslo", name:"Кресло", price:900, unit:"шт" },
+    { id:"puf", name:"Пуфик", price:800, unit:"шт" },
+    { id:"stul", name:"Стул с мягким сиденьем", price:700, unit:"шт" },
+    { id:"ugol", name:"Кухонный уголок", price:650, unit:"место" },
+    { id:"m1", name:"Матрас односпальный", price:1800, unit:"шт" },
+    { id:"m2", name:"Матрас двуспальный", price:2300, unit:"шт" },
+  ]},
+  /* Генеральная уборка и уборка после ремонта: цены ещё не утверждены.
+     Чтобы включить — поставьте enabled:true и проверьте цифры. */
+  { id:"gen", ic:"✨", name:"Генеральная уборка", hint:"по заявке", enabled:false, items:[
+    { id:"gen_m2", name:"Генеральная уборка квартиры", price:120, unit:"м²", min:20 },
+    { id:"rem_m2", name:"Уборка после ремонта", price:180, unit:"м²", min:20 },
+  ]},
+];
+/* ================================================================== */
+
+const fmt = n => Math.round(n).toLocaleString("ru-RU") + " ₽";
+const qty = {};  // id -> количество
+const byId = {};
+GROUPS.forEach(g => g.items.forEach(it => byId[it.id] = {...it, group:g.name}));
+
+const groupsEl = document.getElementById("groups");
+GROUPS.filter(g => g.enabled !== false).forEach((g, gi) => {
+  const d = document.createElement("details");
+  d.className = "group"; d.id = "g-" + g.id;
+  if (gi === 0) d.open = true;
+  d.innerHTML = `<summary><div class="ic">${g.ic}</div><div class="t"><b>${g.name}</b><span>${g.hint}</span></div><span class="badge"></span>
+    <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+    <div class="items">${g.items.map(it => `
+      <div class="item" id="it-${it.id}">
+        <div><div class="nm">${it.name}</div><div class="pr">${fmt(it.price)} / ${it.unit}${it.note ? " · " + it.note : ""}</div></div>
+        <div class="step">
+          <button type="button" data-id="${it.id}" data-d="-1" aria-label="Меньше" disabled>−</button>
+          <input type="number" inputmode="decimal" min="0" step="${it.step || 1}" value="0" data-id="${it.id}" aria-label="${it.name}, количество">
+          <span class="u">${it.unit}</span>
+          <button type="button" data-id="${it.id}" data-d="1" aria-label="Больше">+</button>
+        </div>
+        <div class="sum"></div>
+      </div>`).join("")}</div>`;
+  groupsEl.appendChild(d);
+});
+
+function setQty(id, v) {
+  const it = byId[id]; const step = it.step || 1;
+  v = Math.max(0, Math.round(v / step) * step);
+  if (v > 0 && it.min && v < it.min) v = it.min;
+  qty[id] = v;
+  const row = document.getElementById("it-" + id);
+  row.querySelector("input").value = v ? +v.toFixed(2) : 0;
+  row.querySelector('[data-d="-1"]').disabled = v <= 0;
+  row.classList.toggle("on", v > 0);
+  row.querySelector(".sum").textContent = v > 0 ? `${+v.toFixed(2)} ${it.unit} · ${fmt(lineCost(id))}` : "";
+  render();
+}
+function lineCost(id) {
+  const it = byId[id], v = qty[id] || 0;
+  return v > 0 ? Math.max(v * it.price, it.minCost || 0) : 0;
+}
+groupsEl.addEventListener("click", e => {
+  const b = e.target.closest("button[data-d]"); if (!b) return;
+  const it = byId[b.dataset.id], step = it.step || 1, cur = qty[it.id] || 0, d = +b.dataset.d;
+  let v;
+  if (d > 0) v = cur === 0 ? (it.min || step) : cur + step;
+  else v = cur - step < (it.min || step) ? 0 : cur - step;
+  setQty(it.id, v);
+});
+groupsEl.addEventListener("change", e => {
+  const i = e.target.closest("input[data-id]"); if (!i) return;
+  setQty(i.dataset.id, parseFloat(i.value.replace(",", ".")) || 0);
+});
+
+const subEl = document.getElementById("sub");
+subEl.addEventListener("change", render);
+
+function calc() {
+  const lines = Object.keys(qty).filter(id => qty[id] > 0).map(id => ({ id, it: byId[id], q: qty[id], cost: lineCost(id) }));
+  const subtotal = lines.reduce((s, l) => s + l.cost, 0);
+  const bundleOn = lines.length >= DISCOUNTS.bundleMin;
+  let rate = (subEl.checked ? DISCOUNTS.subscriber : 0) + (bundleOn ? DISCOUNTS.bundle : 0);
+  rate = Math.min(rate, DISCOUNTS.cap);
+  const discount = Math.round(subtotal * rate);
+  return { lines, subtotal, bundleOn, rate, discount, total: subtotal - discount };
+}
+
+function render() {
+  const r = calc();
+  // бейджи на группах
+  GROUPS.forEach(g => {
+    const d = document.getElementById("g-" + g.id); if (!d) return;
+    const n = g.items.filter(it => qty[it.id] > 0).length;
+    d.classList.toggle("has", n > 0);
+    d.querySelector(".badge").textContent = n ? `выбрано ${n}` : "";
+  });
+  // комплекс
+  const b = document.getElementById("bundle");
+  b.classList.toggle("active", r.bundleOn);
+  b.querySelector(".auto").textContent = r.bundleOn ? "−5% применена" : `ещё ${Math.max(0, DISCOUNTS.bundleMin - r.lines.length)} услуг${DISCOUNTS.bundleMin - r.lines.length === 1 ? "а" : "и"}`;
+  // чек
+  const L = document.getElementById("lines");
+  if (!r.lines.length) {
+    L.innerHTML = `<div class="empty">Пока ничего не выбрано. Отметьте услуги выше — здесь появится расчёт.</div>`;
+  } else {
+    L.innerHTML = r.lines.map(l => `<div class="line"><span>${l.it.name} · ${+l.q.toFixed(2)} ${l.it.unit}</span><span>${fmt(l.cost)}</span></div>`).join("")
+      + (r.discount ? `<div class="line disc"><span>Скидка ${Math.round(r.rate * 100)}%${subEl.checked ? " · подписчик" : ""}${r.bundleOn ? " · комплекс" : ""}</span><span>−${fmt(r.discount)}</span></div>` : "")
+      + `<div class="line total"><span>Итого от</span><span>${fmt(r.total)}</span></div>`;
+  }
+  // нижняя панель
+  document.getElementById("barTot").innerHTML = fmt(r.total) + (r.discount ? `<s>${fmt(r.subtotal)}</s>` : "");
+  document.getElementById("barSub").textContent = r.lines.length ? `${r.lines.length} ${plural(r.lines.length, "услуга", "услуги", "услуг")}${r.discount ? ` · экономия ${fmt(r.discount)}` : ""}` : "Выберите услуги";
+  document.getElementById("barGo").disabled = !r.lines.length;
+}
+function plural(n, a, b, c) { const m = n % 10, h = n % 100; return (m === 1 && h !== 11) ? a : (m >= 2 && m <= 4 && (h < 10 || h >= 20)) ? b : c; }
+
+function summaryText() {
+  const r = calc(); if (!r.lines.length) return "";
+  return "Здравствуйте! Хочу заказать уборку.\n"
+    + r.lines.map(l => `• ${l.it.name} — ${+l.q.toFixed(2)} ${l.it.unit} — ${fmt(l.cost)}`).join("\n")
+    + (r.discount ? `\nСкидка ${Math.round(r.rate * 100)}%: −${fmt(r.discount)}` : "")
+    + `\nИтого по калькулятору: от ${fmt(r.total)}`
+    + "\nАдрес и удобное время: ";
+}
+async function copyText() {
+  const t = summaryText(); if (!t) return false;
+  try { await navigator.clipboard.writeText(t); } catch (e) {
+    const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove();
+  }
+  const toast = document.getElementById("toast"); toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 1800);
+  return true;
+}
+document.getElementById("copy").addEventListener("click", copyText);
+document.getElementById("order").addEventListener("click", () => { copyText(); });
+document.getElementById("barGo").addEventListener("click", async () => {
+  await copyText();
+  document.getElementById("itog").scrollIntoView({ behavior: "smooth", block: "start" });
+  setTimeout(() => window.open("https://vk.me/abakan_klining", "_blank", "noopener"), 400);
+});
+render();
+</script>
+</body>
+</html>

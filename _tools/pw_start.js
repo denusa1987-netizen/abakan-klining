@@ -3,7 +3,8 @@
 // Ответ: JSON результата или {error}. Скриншоты — _tools/shots/.
 const http = require('http'), fs = require('fs'), path = require('path');
 const { chromium } = require(process.env.PWCORE);
-const profile = path.join(process.env.LOCALAPPDATA, 'ms-playwright-mcp', 'mcp-chrome-69b27b7');
+const profile = path.join(process.env.LOCALAPPDATA, 'ms-playwright-mcp', process.env.PW_PROFILE || 'mcp-chrome-69b27b7');
+const PORT = +(process.env.PW_PORT || 9444);
 const shotsDir = path.join(__dirname, 'shots'); fs.mkdirSync(shotsDir, { recursive: true });
 
 (async () => {
@@ -43,5 +44,5 @@ const shotsDir = path.join(__dirname, 'shots'); fs.mkdirSync(shotsDir, { recursi
       } catch (e) { res.end(JSON.stringify({ error: String(e.stack || e.message) })); }
       busy = false;
     });
-  }).listen(9444, '127.0.0.1', () => console.log('ready 9444 pages=', ctx.pages().length));
+  }).listen(PORT, '127.0.0.1', () => console.log('ready', PORT, 'pages=', ctx.pages().length));
 })().catch(e => { console.error('ERR', e.message); process.exit(1); });

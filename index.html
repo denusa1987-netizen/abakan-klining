@@ -206,6 +206,7 @@ footer a{display:inline-block;margin-right:14px}
         <a class="btn pri" id="order" href="https://vk.me/abakan_klining" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.8 18.9c-6.6 0-10.4-4.5-10.5-12.1h3.3c.1 5.5 2.6 7.9 4.5 8.3V6.8h3.1v4.7c1.9-.2 3.9-2.4 4.6-4.7h3.1c-.5 3-2.7 5.1-4.3 6 1.6.7 4.1 2.6 5.1 6.1h-3.4c-.8-2.5-2.7-4.4-5.1-4.6v4.6h-.4z"/></svg>
           Заказать во ВКонтакте</a>
+        <a class="btn" href="https://wa.me/79935572702" target="_blank" rel="noopener" id="wa">WhatsApp</a>
         <button class="btn" id="copy">Скопировать расчёт</button>
       </div>
     </div>
@@ -225,7 +226,7 @@ footer a{display:inline-block;margin-right:14px}
     <div class="sec-h"><h2>Как проходит заказ</h2></div>
     <ol class="steps">
       <li><div><b>Считаете здесь</b><span>Отмечаете услуги, видите ориентир по цене.</span></div></li>
-      <li><div><b>Пишете нам в сообщения</b><span>Кнопка «Заказать» откроет диалог. Вставьте расчёт и удобное время.</span></div></li>
+      <li><div><b>Пишете нам</b><span>Кнопка «Заказать» откроет диалог ВКонтакте, рядом WhatsApp и телефон +7 (993) 557-27-02. Вставьте расчёт и удобное время.</span></div></li>
       <li><div><b>Мастер приезжает и называет точную цену</b><span>Если не устроит — просто откажетесь, выезд бесплатный.</span></div></li>
       <li><div><b>Чисто. Оплата любым способом</b><span>Наличные, перевод, СБП.</span></div></li>
     </ol>
@@ -234,7 +235,7 @@ footer a{display:inline-block;margin-right:14px}
   <footer>
     <div class="big">Абакан Клининг</div>
     <div>Уборка и химчистка на дому · Абакан</div>
-    <div style="margin-top:8px"><a href="https://vk.ru/abakan_klining" target="_blank" rel="noopener">Сообщество ВКонтакте</a><a href="https://vk.me/abakan_klining" target="_blank" rel="noopener">Написать нам</a></div>
+    <div style="margin-top:8px"><a href="tel:+79935572702">+7 (993) 557-27-02</a><a href="https://wa.me/79935572702" target="_blank" rel="noopener">WhatsApp</a><a href="https://vk.ru/abakan_klining" target="_blank" rel="noopener">Сообщество ВКонтакте</a><a href="https://vk.me/abakan_klining" target="_blank" rel="noopener">Написать нам</a></div>
   </footer>
 </div>
 
@@ -255,6 +256,10 @@ const DISCOUNTS = {
   cap: 0.15           // максимум суммарной скидки
 };
 const GROUPS = [
+  { id:"gen", name:"Уборка квартиры или офиса", hint:"экспресс 80 ₽/м², генеральная 100 ₽/м²", items:[
+    { id:"exp_m2", name:"Экспресс-уборка", price:80, unit:"м²", min:20, note:"поддерживающая: пыль, полы, санузел, кухня снаружи" },
+    { id:"gen_m2", name:"Генеральная уборка", price:100, unit:"м²", min:20, note:"всё, включая внутри шкафов, окна и технику" },
+  ]},
   { id:"okna", name:"Окна и балконы", hint:"от 500 ₽ за окно", items:[
     { id:"w2", name:"Окно, 2 створки", price:500, unit:"шт" },
     { id:"w3", name:"Окно, 3 створки", price:700, unit:"шт" },
@@ -288,12 +293,6 @@ const GROUPS = [
     { id:"ugol", name:"Кухонный уголок", price:650, unit:"место" },
     { id:"m1", name:"Матрас односпальный", price:1800, unit:"шт" },
     { id:"m2", name:"Матрас двуспальный", price:2300, unit:"шт" },
-  ]},
-  /* Генеральная уборка и уборка после ремонта: цены ещё не утверждены.
-     Чтобы включить — поставьте enabled:true и проверьте цифры. */
-  { id:"gen", name:"Генеральная уборка", hint:"по заявке", enabled:false, items:[
-    { id:"gen_m2", name:"Генеральная уборка квартиры", price:120, unit:"м²", min:20 },
-    { id:"rem_m2", name:"Уборка после ремонта", price:180, unit:"м²", min:20 },
   ]},
 ];
 /* ================================================================== */
@@ -413,6 +412,7 @@ async function copyText() {
 }
 document.getElementById("copy").addEventListener("click", copyText);
 document.getElementById("order").addEventListener("click", () => { copyText(); });
+document.getElementById("wa").addEventListener("click", e => { const t = summaryText(); if (t) e.currentTarget.href = "https://wa.me/79935572702?text=" + encodeURIComponent(t); });
 document.getElementById("barGo").addEventListener("click", async () => {
   await copyText();
   document.getElementById("itog").scrollIntoView({ behavior: "smooth", block: "start" });

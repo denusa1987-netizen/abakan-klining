@@ -1,0 +1,4 @@
+_tools/shots/
+_tools/*.log
+_tools/*.err
+raw/
